@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import base_router
 
 app = FastAPI(
     title="Device Pulse",
@@ -19,9 +20,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Device Pulse API"}
+app.include_router(base_router)
 
 
 if __name__ == "__main__":
