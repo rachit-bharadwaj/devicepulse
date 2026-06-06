@@ -97,27 +97,10 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.loading.set(false);
         console.error('Login Error:', err);
-        const errMsg = err.error?.detail || 'Invalid username or password';
-        
-        // Fallback: If backend is not running, let's allow a demo login
         if (err.status === 0 || err.status === 404) {
-          this.showToast('Backend offline. Simulating demo login...', 'info');
-          setTimeout(() => {
-            if (userVal === 'admin' && passVal === 'admin123') {
-              this.showToast('Demo login successful!', 'success');
-              this.authService.currentUser.set({ id: 1, username: 'admin', email: 'admin@demo.com', role: 'admin', is_active: true });
-              this.authService.isAuthenticated.set(true);
-              if (typeof window !== 'undefined' && window.localStorage) {
-                localStorage.setItem('access_token', 'demo-token');
-                localStorage.setItem('user', JSON.stringify(this.authService.currentUser()));
-              }
-              // Redirect to home
-              setTimeout(() => this.router.navigate(['/']), 1000);
-            } else {
-              this.showToast('Demo credentials: admin / admin123', 'error');
-            }
-          }, 1500);
+          this.showToast('Could not connect to authentication server.', 'error');
         } else {
+          const errMsg = err.error?.detail || 'Invalid username or password';
           this.showToast(errMsg, 'error');
         }
       }
@@ -166,16 +149,10 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.loading.set(false);
         console.error('Register Error:', err);
-        const errMsg = err.error?.detail || 'Failed to register. Username or email may exist.';
-        
-        // Fallback: If backend is not running, simulate registration
         if (err.status === 0 || err.status === 404) {
-          this.showToast('Backend offline. Simulating demo registration...', 'info');
-          setTimeout(() => {
-            this.showToast('Demo registration successful! Switching to login.', 'success');
-            setTimeout(() => this.setMode('login'), 1000);
-          }, 1500);
+          this.showToast('Could not connect to authentication server.', 'error');
         } else {
+          const errMsg = err.error?.detail || 'Failed to register. Username or email may exist.';
           this.showToast(errMsg, 'error');
         }
       }
