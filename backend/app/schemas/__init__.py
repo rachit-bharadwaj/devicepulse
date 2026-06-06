@@ -13,6 +13,7 @@ from app.schemas.user import (
     UserResponse,
     UserListResponse,
     UserDetailResponse,
+    UserDeleteResponse,
 )
 
 __all__ = [
@@ -28,4 +29,5 @@ __all__ = [
     "UserResponse",
     "UserListResponse",
     "UserDetailResponse",
+    "UserDeleteResponse",
 ]

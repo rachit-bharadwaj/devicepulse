@@ -42,3 +42,8 @@ class UserDetailResponse(BaseModel):
     status: int
     message: str
     user: UserResponse
+
+
+class UserDeleteResponse(BaseModel):
+    status: int
+    message: str
