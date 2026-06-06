@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
-from app.routes import base_router
+from app.routes import base_router, device_router
 
 app = FastAPI(
     title="Device Pulse",
@@ -22,6 +22,7 @@ app.add_middleware(
 
 
 app.include_router(base_router)
+app.include_router(device_router)
 
 
 if __name__ == "__main__":
