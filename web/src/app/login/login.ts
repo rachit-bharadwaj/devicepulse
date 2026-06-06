@@ -2,19 +2,19 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class LoginComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
 
   // Form fields
   username = signal('');
@@ -85,20 +85,12 @@ export class LoginComponent implements OnInit {
     // Call real backend endpoint or mock it
     const payload = { username: userVal, password: passVal };
     
-    this.http.post('http://localhost:8000/auth/login', payload).subscribe({
+    this.authService.login(payload).subscribe({
       next: (res: any) => {
         this.loading.set(false);
         this.showToast('Logged in successfully!', 'success');
         console.log('Login Response:', res);
         
-        // Save token to localStorage
-        if (res.access_token) {
-          localStorage.setItem('access_token', res.access_token);
-        }
-        if (res.user) {
-          localStorage.setItem('user', JSON.stringify(res.user));
-        }
-
         // Redirect to dashboard (if it exists, or just log success)
         // setTimeout(() => this.router.navigate(['/dashboard']), 1000);
       },
@@ -113,8 +105,12 @@ export class LoginComponent implements OnInit {
           setTimeout(() => {
             if (userVal === 'admin' && passVal === 'admin123') {
               this.showToast('Demo login successful!', 'success');
-              localStorage.setItem('access_token', 'demo-token');
-              localStorage.setItem('user', JSON.stringify({ username: 'admin', role: 'admin' }));
+              this.authService.currentUser.set({ id: 1, username: 'admin', email: 'admin@demo.com', role: 'admin', is_active: true });
+              this.authService.isAuthenticated.set(true);
+              if (typeof window !== 'undefined' && window.localStorage) {
+                localStorage.setItem('access_token', 'demo-token');
+                localStorage.setItem('user', JSON.stringify(this.authService.currentUser()));
+              }
             } else {
               this.showToast('Demo credentials: admin / admin123', 'error');
             }
@@ -153,12 +149,10 @@ export class LoginComponent implements OnInit {
     const payload = {
       username: userVal,
       email: emailVal,
-      password: passVal,
-      role: 'user',
-      is_active: true
+      password: passVal
     };
 
-    this.http.post('http://localhost:8000/auth/register', payload).subscribe({
+    this.authService.register(payload).subscribe({
       next: (res: any) => {
         this.loading.set(false);
         this.showToast('Registered successfully! You can now sign in.', 'success');
