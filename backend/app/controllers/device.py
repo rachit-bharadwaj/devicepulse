@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import connect_db
 from app.database.models import Device
@@ -14,18 +14,20 @@ async def get_devices(db: Session = Depends(connect_db)):
         "count": len(devices),
     }
 
+
 async def get_device_by_id(device_id: int, db: Session = Depends(connect_db)):
     db_device = db.query(Device).filter(Device.id == device_id).first()
     if not db_device:
-        return {
-            "status": 404,
-            "message": "Device not found",
-        }
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Device not found",
+        )
     return {
         "status": 200,
         "message": "Device fetched successfully",
         "device": db_device,
     }
+
 
 async def add_device(device_data: DeviceCreate, db: Session = Depends(connect_db)):
     # Instantiate the SQLAlchemy model using data from the Pydantic schema
@@ -45,18 +47,19 @@ async def add_device(device_data: DeviceCreate, db: Session = Depends(connect_db
         "device": db_device,
     }
 
+
 async def update_device(device_id: int, device_data: DeviceUpdate, db: Session = Depends(connect_db)):
     db_device = db.query(Device).filter(Device.id == device_id).first()
     if not db_device:
-        return {
-            "status": 404,
-            "message": "Device not found",
-        }
-    db_device.name = device_data.name
-    db_device.ip_address = device_data.ip_address
-    db_device.type = device_data.type
-    db_device.status = device_data.status
-    db_device.description = device_data.description
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Device not found",
+        )
+    # Update only the fields that were explicitly sent in the request body
+    update_data = device_data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_device, key, value)
+        
     db.commit()
     db.refresh(db_device)
     return {
@@ -65,13 +68,14 @@ async def update_device(device_id: int, device_data: DeviceUpdate, db: Session =
         "device": db_device,
     }
 
+
 async def remove_device(device_id: int, db: Session = Depends(connect_db)):
     db_device = db.query(Device).filter(Device.id == device_id).first()
     if not db_device:
-        return {
-            "status": 404,
-            "message": "Device not found",
-        }
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Device not found",
+        )
     db.delete(db_device)
     db.commit()
     return {

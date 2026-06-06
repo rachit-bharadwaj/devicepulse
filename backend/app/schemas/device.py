@@ -15,8 +15,12 @@ class DeviceCreate(DeviceBase):
     pass
 
 
-class DeviceUpdate(DeviceBase):
-    pass
+class DeviceUpdate(BaseModel):
+    name: str | None = Field(None, max_length=255, example="Core Router")
+    ip_address: str | None = Field(None, max_length=45, example="192.168.1.1")
+    type: str | None = Field(None, max_length=100, example="Router")
+    status: DeviceStatus | None = None
+    description: str | None = Field(None, max_length=500, example="Primary edge router")
 
 
 class DeviceResponse(DeviceBase):
