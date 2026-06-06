@@ -15,6 +15,10 @@ from app.schemas.user import (
     UserDetailResponse,
     UserDeleteResponse,
 )
+from app.schemas.auth import (
+    LoginRequest,
+    TokenResponse,
+)
 
 __all__ = [
     "DeviceCreate",
@@ -30,4 +34,6 @@ __all__ = [
     "UserListResponse",
     "UserDetailResponse",
     "UserDeleteResponse",
+    "LoginRequest",
+    "TokenResponse",
 ]
