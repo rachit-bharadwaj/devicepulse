@@ -1,7 +1,7 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -11,8 +11,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
 
   // Form fields
@@ -28,10 +29,21 @@ export class LoginComponent {
   // Notifications
   toast = signal<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
+  ngOnInit() {
+    this.route.url.subscribe(url => {
+      const path = url[0]?.path;
+      if (path === 'register') {
+        this.mode.set('register');
+      } else {
+        this.mode.set('login');
+      }
+    });
+  }
+
   // Switch between Login and Register modes
   setMode(newMode: 'login' | 'register') {
-    this.mode.set(newMode);
     this.clearForm();
+    this.router.navigate([`/${newMode}`]);
   }
 
   togglePasswordVisibility() {
