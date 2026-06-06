@@ -1,7 +1,18 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.routes import api_router
+from app.database import engine
+from app.database.models import Base
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Automatically create tables in the database on startup
+    Base.metadata.create_all(bind=engine)
+    yield
+
 
 app = FastAPI(
     title="Device Pulse",
@@ -10,6 +21,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     author="Rachit",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
