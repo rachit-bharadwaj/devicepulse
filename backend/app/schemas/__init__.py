@@ -7,6 +7,13 @@ from app.schemas.device import (
     DeviceDetailResponse,
     DeviceDeleteResponse,
 )
+from app.schemas.user import (
+    UserCreate,
+    UserUpdate,
+    UserResponse,
+    UserListResponse,
+    UserDetailResponse,
+)
 
 __all__ = [
     "DeviceCreate",
@@ -16,4 +23,9 @@ __all__ = [
     "DeviceCreateResponse",
     "DeviceDetailResponse",
     "DeviceDeleteResponse",
+    "UserCreate",
+    "UserUpdate",
+    "UserResponse",
+    "UserListResponse",
+    "UserDetailResponse",
 ]
