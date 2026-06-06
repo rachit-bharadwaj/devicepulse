@@ -91,8 +91,8 @@ export class LoginComponent implements OnInit {
         this.showToast('Logged in successfully!', 'success');
         console.log('Login Response:', res);
         
-        // Redirect to dashboard (if it exists, or just log success)
-        // setTimeout(() => this.router.navigate(['/dashboard']), 1000);
+        // Redirect to home
+        setTimeout(() => this.router.navigate(['/']), 1000);
       },
       error: (err) => {
         this.loading.set(false);
@@ -111,6 +111,8 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem('access_token', 'demo-token');
                 localStorage.setItem('user', JSON.stringify(this.authService.currentUser()));
               }
+              // Redirect to home
+              setTimeout(() => this.router.navigate(['/']), 1000);
             } else {
               this.showToast('Demo credentials: admin / admin123', 'error');
             }
