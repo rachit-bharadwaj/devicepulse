@@ -15,6 +15,10 @@ class DeviceCreate(DeviceBase):
     pass
 
 
+class DeviceUpdate(DeviceBase):
+    pass
+
+
 class DeviceResponse(DeviceBase):
     id: int
     last_checked: datetime
@@ -36,3 +40,13 @@ class DeviceCreateResponse(BaseModel):
     status: int
     message: str
     device: DeviceResponse
+
+
+# Re-use or alias for detail/update endpoints
+class DeviceDetailResponse(DeviceCreateResponse):
+    pass
+
+
+class DeviceDeleteResponse(BaseModel):
+    status: int
+    message: str
