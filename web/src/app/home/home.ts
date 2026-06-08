@@ -290,6 +290,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  goToUserManagement() {
+    this.router.navigate(['/user-management']);
+  }
+
   logout() {
     this.authService.logout();
   }

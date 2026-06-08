@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.controllers.user import (
     get_users,
     get_user_by_id,
     create_user,
     update_user,
     delete_user,
+    get_current_admin,
 )
 from app.schemas import (
     UserListResponse,
@@ -14,7 +15,8 @@ from app.schemas import (
 
 user_router = APIRouter(
     prefix="/user",
-    tags=["User"]
+    tags=["User"],
+    dependencies=[Depends(get_current_admin)]
 )
 
 user_router.get("/", response_model=UserListResponse)(get_users)

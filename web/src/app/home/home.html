@@ -84,6 +84,12 @@
               <div class="font-bold text-[#003c74] font-xp">{{ authService.currentUser()?.username }}</div>
               <div class="text-zinc-600 capitalize font-xp">Role: {{ authService.currentUser()?.role || 'operator' }}</div>
               <div class="h-[1px] bg-zinc-300 my-1"></div>
+              @if (authService.currentUser()?.role === 'ADMIN') {
+                <button (click)="goToUserManagement()" class="text-left text-[#003c74] hover:underline flex items-center gap-1.5 cursor-pointer font-xp font-bold">
+                  <span>👥</span> Manage User Accounts
+                </button>
+                <div class="h-[1px] bg-zinc-300 my-1"></div>
+              }
               <button (click)="logout()" class="text-left text-red-700 hover:underline flex items-center gap-1.5 cursor-pointer font-xp">
                 <span>🚪</span> Log off session
               </button>
@@ -379,6 +385,14 @@
           <span class="text-sm font-semibold text-zinc-200">{{ authService.currentUser()?.username }}</span>
           <span class="text-xs text-zinc-500 font-medium capitalize">{{ authService.currentUser()?.role || 'operator' }}</span>
         </div>
+        @if (authService.currentUser()?.role === 'ADMIN') {
+          <button 
+            type="button" 
+            (click)="goToUserManagement()"
+            class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 bg-zinc-900 border border-cyan-950 hover:border-cyan-900/60 hover:bg-zinc-800/60 rounded-xl transition-all duration-200 cursor-pointer">
+            👥 Users
+          </button>
+        }
         <button 
           type="button" 
           (click)="themeService.toggleTheme()"

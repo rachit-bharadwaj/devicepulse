@@ -1,0 +1,537 @@
+@if (themeService.currentTheme() === 'xp') {
+  <!-- ==================== WINDOWS XP USER ACCOUNTS THEME ==================== -->
+  <div class="xp-desktop min-h-screen text-black font-xp p-3 pb-16">
+    
+    <!-- Main Explorer Window -->
+    <div class="xp-window w-full min-h-[calc(100vh-64px)] flex flex-col">
+      <!-- Title Bar -->
+      <div class="xp-title-bar">
+        <div class="xp-title-text font-xp">
+          <span class="inline-flex gap-0.5 text-xs mr-1">
+            <span class="w-1.5 h-1.5 bg-[#f05032]"></span>
+            <span class="w-1.5 h-1.5 bg-[#7fba00]"></span>
+          </span>
+          User Accounts Manager - Device Pulse
+        </div>
+        <div class="xp-title-buttons">
+          <button type="button" class="xp-btn-min" disabled>_</button>
+          <button type="button" class="xp-btn-max" disabled>[]</button>
+          <button type="button" class="xp-btn-close" (click)="goBack()">X</button>
+        </div>
+      </div>
+
+      <!-- Navigation / Menu Bar -->
+      <div class="flex items-center justify-between border-b border-[#d4d0c8] bg-[#f1efe9] p-1 text-[11px] font-xp select-none">
+        <div class="flex gap-3 px-2">
+          <span class="cursor-pointer hover:bg-[#316ac5] hover:text-white px-1.5 py-0.5 rounded" (click)="goBack()"><u>F</u>ile</span>
+          <span class="cursor-pointer hover:bg-[#316ac5] hover:text-white px-1.5 py-0.5 rounded" (click)="openAddModal()"><u>A</u>ctions</span>
+          <span class="cursor-pointer hover:bg-[#316ac5] hover:text-white px-1.5 py-0.5 rounded" (click)="themeService.toggleTheme()"><u>V</u>iew</span>
+          <span class="cursor-pointer hover:bg-[#316ac5] hover:text-white px-1.5 py-0.5 rounded"><u>H</u>elp</span>
+        </div>
+        <div class="text-zinc-500 pr-2">Secure Administrator Session</div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="flex items-center gap-2 border-b border-[#808080]/30 bg-[#f1efe9] p-1.5 select-none">
+        <div class="flex items-center gap-1">
+          <button type="button" (click)="goBack()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp">
+            <span class="text-sm">⬅️</span> Back
+          </button>
+          <button type="button" (click)="fetchUsers()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp">
+            <span class="text-sm">🔄</span> Refresh
+          </button>
+          <div class="h-4 w-[1px] bg-[#a0a0a0] mx-1"></div>
+          <button type="button" (click)="openAddModal()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp">
+            <span class="text-sm">➕</span> Add User
+          </button>
+          <div class="h-4 w-[1px] bg-[#a0a0a0] mx-1"></div>
+          <button type="button" (click)="themeService.toggleTheme()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp font-bold">
+            <span class="text-sm">🎨</span> Modern Theme
+          </button>
+        </div>
+
+        <!-- Address Bar -->
+        <div class="flex items-center gap-1.5 flex-1 max-w-md w-full ml-auto">
+          <span class="text-zinc-500 text-xs font-xp">Address</span>
+          <input 
+            type="text" 
+            [(ngModel)]="addressBarValue" 
+            (keydown.enter)="navigateAddress()"
+            class="xp-bevel-in bg-white px-1.5 py-0.5 text-xs font-xp flex-1 h-[22px] outline-none border border-[#7f9fdb]" />
+          <button type="button" (click)="navigateAddress()" class="xp-btn px-2 py-0.5 text-xs font-xp h-[22px] flex items-center justify-center">Go</button>
+        </div>
+      </div>
+
+      <!-- Explorer Content Area -->
+      <div class="flex-1 bg-white flex flex-col md:flex-row p-2.5 gap-2.5 overflow-hidden">
+        
+        <!-- Left Sidebar Tasks Pane -->
+        <div class="w-full md:w-64 bg-[#7b9ed6]/20 border border-[#7b9ed6] p-2 flex flex-col gap-3 select-none text-xs">
+          
+          <!-- Task Group 1: User Account Tasks -->
+          <div class="border border-[#7b9ed6] rounded bg-white shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-[#215dc6] to-[#6091e6] text-white font-bold text-xs p-1.5 select-none flex items-center justify-between">
+              <span>Account Tasks</span>
+            </div>
+            <div class="p-2 flex flex-col gap-2 bg-[#d6e4f6]">
+              <button (click)="openAddModal()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>➕</span> Add a new user
+              </button>
+              <button (click)="fetchUsers()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>🔄</span> Refresh accounts list
+              </button>
+              <button (click)="goBack()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>⬅️</span> Back to dashboard
+              </button>
+            </div>
+          </div>
+
+          <!-- Task Group 2: Settings -->
+          <div class="border border-[#7b9ed6] rounded bg-white shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-[#215dc6] to-[#6091e6] text-white font-bold text-xs p-1.5 select-none flex items-center justify-between">
+              <span>Other Options</span>
+            </div>
+            <div class="p-2 flex flex-col gap-2 bg-[#d6e4f6]">
+              <button (click)="themeService.toggleTheme()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp font-bold">
+                <span>🎨</span> Switch to Modern Theme
+              </button>
+              <button (click)="logout()" class="text-left text-red-750 hover:underline hover:text-red-600 flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>🚪</span> Sign Out admin
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Info Panel -->
+          <div class="border border-[#7b9ed6] rounded bg-white p-2.5 shadow-sm text-zinc-650 flex flex-col gap-1.5 bg-[#fcfcfc]">
+            <div class="font-bold text-zinc-850 text-xs border-b border-zinc-200 pb-1 mb-1">Session Info</div>
+            <div>Active User: <b class="text-zinc-800">{{ authService.currentUser()?.username }}</b></div>
+            <div>User Role: <span class="bg-[#107c10] text-white font-bold px-1.5 py-0.2 rounded text-[10px]">ADMIN</span></div>
+            <div>Total Accounts: <b class="text-zinc-800">{{ users().length }}</b></div>
+          </div>
+        </div>
+
+        <!-- Main Workspace Pane (User List) -->
+        <div class="flex-1 flex flex-col border border-[#7b9ed6] xp-bevel-in p-2 overflow-y-auto">
+          <div class="mb-3">
+            <h2 class="text-base font-bold text-[#003c74] font-xp">Registered User Accounts</h2>
+            <p class="text-[11px] text-zinc-500">View, create, modify, and delete user login profiles for the local Device Pulse system.</p>
+          </div>
+
+          @if (loading()) {
+            <div class="flex flex-col items-center justify-center py-12 gap-2">
+              <div class="animate-pulse text-zinc-600 font-bold text-xs">Querying User Database...</div>
+            </div>
+          } @else if (users().length === 0) {
+            <div class="flex flex-col items-center justify-center py-12 text-center select-none">
+              <span class="text-3xl mb-1">📁</span>
+              <h4 class="font-bold text-sm text-zinc-800 font-xp">No User Profiles Found</h4>
+              <button type="button" (click)="openAddModal()" class="xp-btn mt-3 py-1 px-4 font-xp">Create First User</button>
+            </div>
+          } @else {
+            <div class="overflow-x-auto border border-[#7f9fdb]">
+              <table class="w-full text-left border-collapse text-xs font-xp">
+                <thead>
+                  <tr class="bg-[#ece9d8] border-b border-[#c0c0c0] text-zinc-800 select-none">
+                    <th class="p-1.5 border-r border-[#d4d0c8]">ID</th>
+                    <th class="p-1.5 border-r border-[#d4d0c8]">Username</th>
+                    <th class="p-1.5 border-r border-[#d4d0c8]">Email Address</th>
+                    <th class="p-1.5 border-r border-[#d4d0c8]">Role</th>
+                    <th class="p-1.5 border-r border-[#d4d0c8]">Status</th>
+                    <th class="p-1.5 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of users(); track user.id) {
+                    <tr class="hover:bg-[#316ac5]/15 border-b border-[#e5e5e5] group select-none">
+                      <td class="p-1.5 border-r border-[#e5e5e5] font-bold text-zinc-500">{{ user.id }}</td>
+                      <td class="p-1.5 border-r border-[#e5e5e5] font-bold text-[#003c74]">{{ user.username }}</td>
+                      <td class="p-1.5 border-r border-[#e5e5e5] font-mono text-zinc-600">{{ user.email }}</td>
+                      <td class="p-1.5 border-r border-[#e5e5e5]">
+                        <span [class]="user.role === 'ADMIN' ? 'bg-[#215dc6] text-white border-[#124ba2]' : 'bg-[#e0e0e0] text-zinc-700 border-zinc-400'" class="px-2 py-0.2 rounded border font-bold text-[10px]">
+                          {{ user.role }}
+                        </span>
+                      </td>
+                      <td class="p-1.5 border-r border-[#e5e5e5]">
+                        <span [class]="user.is_active ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'" class="flex items-center gap-1">
+                          <span class="w-1.5 h-1.5 rounded-full" [class.bg-emerald-600]="user.is_active" [class.bg-rose-500]="!user.is_active"></span>
+                          {{ user.is_active ? 'Active' : 'Disabled' }}
+                        </span>
+                      </td>
+                      <td class="p-1.5 flex gap-1 justify-center">
+                        <button (click)="openEditModal(user)" class="xp-btn py-0.5 px-2 text-[10px] hover:text-black">Edit</button>
+                        <button (click)="deleteUser(user.id!)" class="xp-btn py-0.5 px-2 text-[10px] text-red-700 hover:text-red-900">Delete</button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Windows XP Bottom Taskbar -->
+      <div class="xp-taskbar">
+        <button type="button" (click)="goBack()" class="xp-start-btn font-xp">
+          <span>🟢</span> start
+        </button>
+        <div class="h-4 w-[1px] bg-[#a0a0a0] mx-1"></div>
+        <div class="flex-1 px-4 flex items-center gap-2 overflow-hidden h-full">
+          <div class="bg-[#3d7bf4] text-white border border-[#245dd7] px-3 py-1 text-xs font-bold rounded flex items-center gap-1.5 select-none h-[80%] cursor-default">
+            <span>👥</span> User Accounts
+          </div>
+        </div>
+        <!-- System Tray -->
+        <div class="bg-[#0c8bee] border-l-2 border-[#1258d3] h-full px-3 flex items-center gap-2 select-none">
+          <span class="text-[10px] font-bold text-white font-xp">🔒 Admin Mode</span>
+          <span class="text-xs font-bold text-white font-xp">11:00 AM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit User Windows XP Modal -->
+    @if (showModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45">
+        <div class="xp-window w-full max-w-md">
+          <!-- Title Bar -->
+          <div class="xp-title-bar">
+            <div class="xp-title-text font-xp">
+              {{ modalMode() === 'add' ? 'Add User Account' : 'Update User Profile' }}
+            </div>
+            <div class="xp-title-buttons">
+              <button type="button" class="xp-btn-close" (click)="closeModal()">X</button>
+            </div>
+          </div>
+          <div class="xp-window-inner p-3 bg-white">
+            <form (ngSubmit)="onSubmitUser()" #userFormXp="ngForm" class="flex flex-col gap-3 font-xp text-xs">
+              <div class="flex flex-col gap-3">
+                <!-- Username -->
+                <div class="grid grid-cols-3 items-center gap-2">
+                  <label for="username_xp" class="xp-label text-right pr-2">Username:</label>
+                  <input 
+                    type="text" 
+                    id="username_xp" 
+                    name="username"
+                    [(ngModel)]="userName"
+                    required
+                    placeholder="john_doe"
+                    class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp" />
+                </div>
+
+                <!-- Email -->
+                <div class="grid grid-cols-3 items-center gap-2">
+                  <label for="email_xp" class="xp-label text-right pr-2">Email Address:</label>
+                  <input 
+                    type="email" 
+                    id="email_xp" 
+                    name="email"
+                    [(ngModel)]="userEmail"
+                    required
+                    placeholder="john@example.com"
+                    class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp" />
+                </div>
+
+                <!-- Password -->
+                <div class="grid grid-cols-3 items-center gap-2">
+                  <label for="password_xp" class="xp-label text-right pr-2">Password:</label>
+                  <input 
+                    type="password" 
+                    id="password_xp" 
+                    name="password"
+                    [(ngModel)]="userPassword"
+                    [required]="modalMode() === 'add'"
+                    placeholder="{{ modalMode() === 'add' ? 'Enter password' : 'Leave empty to keep current' }}"
+                    class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp" />
+                </div>
+
+                <!-- Role -->
+                <div class="grid grid-cols-3 items-center gap-2">
+                  <label for="role_xp" class="xp-label text-right pr-2">System Role:</label>
+                  <select 
+                    id="role_xp" 
+                    name="role"
+                    [(ngModel)]="userRole"
+                    required
+                    class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp">
+                    <option value="USER">USER (Operator)</option>
+                    <option value="ADMIN">ADMIN (Administrator)</option>
+                  </select>
+                </div>
+
+                <!-- Status (Active) -->
+                <div class="grid grid-cols-3 items-center gap-2">
+                  <label for="active_xp" class="xp-label text-right pr-2">Account Status:</label>
+                  <div class="col-span-2 flex items-center gap-1.5">
+                    <input 
+                      type="checkbox" 
+                      id="active_xp" 
+                      name="active"
+                      [(ngModel)]="userActive"
+                      class="h-4 w-4 cursor-pointer" />
+                    <label for="active_xp" class="cursor-pointer">Enabled / Active Profile</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex justify-end gap-2 border-t border-[#c0c0c0] pt-3 mt-2">
+                <button type="submit" [disabled]="!userFormXp.form?.valid" class="xp-btn min-w-[80px] font-bold">
+                  {{ modalMode() === 'add' ? 'Create' : 'Save' }}
+                </button>
+                <button type="button" (click)="closeModal()" class="xp-btn min-w-[80px]">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Windows XP Classic Alert Balloon Notification -->
+    @if (toast(); as t) {
+      <div class="fixed bottom-12 right-6 z-50 border border-black bg-[#ffffea] p-3 rounded-lg shadow-lg max-w-[260px] flex gap-3 text-black">
+        <span class="text-base select-none">💬</span>
+        <div class="flex-1">
+          <div class="flex justify-between items-center -mt-1">
+            <span class="text-[10px] font-bold text-[#003c74] font-xp">User Administration System</span>
+            <button (click)="toast.set(null)" class="text-[9px] font-extrabold hover:text-red-600 px-1 cursor-pointer">X</button>
+          </div>
+          <p class="text-xs mt-1 font-xp leading-normal">{{ t.message }}</p>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <!-- ==================== MODERN GLASSMORPHIC USER ACCOUNTS THEME ==================== -->
+  <div class="relative min-h-screen bg-zinc-950 text-white overflow-hidden font-sans p-6">
+    <!-- Glowing Background Blobs -->
+    <div class="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-cyan-500/5 blur-[100px]"></div>
+    <div class="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-emerald-500/5 blur-[120px]"></div>
+
+    <!-- Header -->
+    <header class="relative max-w-6xl mx-auto flex items-center justify-between border-b border-zinc-800/80 pb-4 mb-6 z-10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+          <span class="text-lg text-cyan-400">👥</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white leading-none">DEVICE PULSE</h1>
+          <span class="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">User Administration</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button 
+          (click)="goBack()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 rounded-xl transition-all duration-200 cursor-pointer">
+          ⬅️ Back to Dashboard
+        </button>
+        <button 
+          (click)="themeService.toggleTheme()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 rounded-xl transition-all duration-200 cursor-pointer">
+          🎨 Switch to Retro Theme
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative max-w-6xl mx-auto z-10 grid grid-cols-1 gap-6">
+      
+      <!-- Users List Pane -->
+      <div class="rounded-2xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-xl p-6 shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-white">System Accounts Management</h2>
+            <p class="text-xs text-zinc-400 mt-1">Configure credentials, status switches, and security roles for all dashboard operators.</p>
+          </div>
+          <button 
+            (click)="openAddModal()" 
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 active:scale-[0.98] transition-all cursor-pointer">
+            <span>➕</span> Add New Operator
+          </button>
+        </div>
+
+        @if (loading()) {
+          <div class="flex flex-col items-center justify-center py-16 gap-3">
+            <div class="w-8 h-8 border-2 border-zinc-800 border-t-cyan-500 rounded-full animate-spin"></div>
+            <p class="text-xs text-zinc-500">Querying credentials database...</p>
+          </div>
+        } @else if (users().length === 0) {
+          <div class="flex flex-col items-center justify-center py-16 text-center">
+            <span class="text-3xl mb-2">👤</span>
+            <h4 class="text-sm font-bold text-zinc-300">No Operator Logins Registered</h4>
+            <p class="text-xs text-zinc-500 mt-1">Add users to allow team access.</p>
+            <button (click)="openAddModal()" class="mt-4 px-4 py-2 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 rounded-xl text-xs font-medium">Add User</button>
+          </div>
+        } @else {
+          <!-- User Cards / Table -->
+          <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-zinc-950/20">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-zinc-900/60 border-b border-zinc-850 text-zinc-400 font-semibold uppercase tracking-wider">
+                  <th class="p-4">ID</th>
+                  <th class="p-4">Username</th>
+                  <th class="p-4">Email</th>
+                  <th class="p-4">Role</th>
+                  <th class="p-4">Account Status</th>
+                  <th class="p-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-900/50">
+                @for (user of users(); track user.id) {
+                  <tr class="hover:bg-zinc-900/20 transition-all">
+                    <td class="p-4 text-zinc-500 font-mono font-semibold">#{{ user.id }}</td>
+                    <td class="p-4 font-semibold text-zinc-200">{{ user.username }}</td>
+                    <td class="p-4 text-zinc-450 font-mono">{{ user.email }}</td>
+                    <td class="p-4">
+                      <span [class]="user.role === 'ADMIN' ? 'bg-indigo-950/40 text-indigo-300 border-indigo-500/20' : 'bg-zinc-900 text-zinc-400 border-zinc-800'" class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold">
+                        {{ user.role }}
+                      </span>
+                    </td>
+                    <td class="p-4">
+                      <span [class]="user.is_active ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/25' : 'bg-rose-950/40 text-rose-300 border-rose-500/25'" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-bold">
+                        <span class="w-1.5 h-1.5 rounded-full" [class.bg-emerald-500]="user.is_active" [class.bg-rose-500]="!user.is_active"></span>
+                        {{ user.is_active ? 'Active' : 'Disabled' }}
+                      </span>
+                    </td>
+                    <td class="p-4 text-center">
+                      <div class="inline-flex items-center justify-center gap-2">
+                        <button 
+                          (click)="openEditModal(user)" 
+                          class="px-2.5 py-1 text-[10px] font-semibold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg border border-zinc-800 transition-all cursor-pointer">
+                          Edit
+                        </button>
+                        <button 
+                          (click)="deleteUser(user.id!)" 
+                          class="px-2.5 py-1 text-[10px] font-semibold bg-rose-950/25 border border-rose-900/30 text-rose-450 hover:bg-rose-900/20 rounded-lg transition-all cursor-pointer">
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </main>
+
+    <!-- Add/Edit User Modern Modal -->
+    @if (showModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="w-full max-w-md p-6 rounded-2xl bg-zinc-900 border border-zinc-800/80 shadow-2xl relative z-55 animate-scale-up">
+          
+          <div class="flex justify-between items-center mb-5 border-b border-zinc-800 pb-3">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+              {{ modalMode() === 'add' ? 'Register Operator Account' : 'Edit Operator Details' }}
+            </h3>
+            <button (click)="closeModal()" class="text-zinc-500 hover:text-white cursor-pointer text-xs font-bold p-1">✕</button>
+          </div>
+
+          <form (ngSubmit)="onSubmitUser()" #userFormModern="ngForm" class="flex flex-col gap-4 text-xs">
+            <div class="flex flex-col gap-3">
+              <!-- Name -->
+              <div class="flex flex-col gap-1.5">
+                <label class="font-bold text-zinc-400">Username</label>
+                <input 
+                  type="text" 
+                  name="username" 
+                  [(ngModel)]="userName" 
+                  required 
+                  placeholder="e.g. operator_dave" 
+                  class="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white placeholder-zinc-650 focus:border-cyan-500/80 focus:shadow-[0_0_8px_rgba(6,182,212,0.15)] outline-none transition-all duration-200" />
+              </div>
+
+              <!-- Email -->
+              <div class="flex flex-col gap-1.5">
+                <label class="font-bold text-zinc-400">Email Address</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  [(ngModel)]="userEmail" 
+                  required 
+                  placeholder="operator@devicepulse.local" 
+                  class="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white placeholder-zinc-650 focus:border-cyan-500/80 focus:shadow-[0_0_8px_rgba(6,182,212,0.15)] outline-none transition-all duration-200" />
+              </div>
+
+              <!-- Password -->
+              <div class="flex flex-col gap-1.5">
+                <label class="font-bold text-zinc-400">Password</label>
+                <input 
+                  type="password" 
+                  name="password" 
+                  [(ngModel)]="userPassword" 
+                  [required]="modalMode() === 'add'" 
+                  placeholder="{{ modalMode() === 'add' ? 'Secure password (min 6 chars)' : 'Leave empty to keep current password' }}" 
+                  class="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white placeholder-zinc-650 focus:border-cyan-500/80 focus:shadow-[0_0_8px_rgba(6,182,212,0.15)] outline-none transition-all duration-200" />
+              </div>
+
+              <!-- Role -->
+              <div class="flex flex-col gap-1.5">
+                <label class="font-bold text-zinc-400">System Role</label>
+                <select 
+                  name="role" 
+                  [(ngModel)]="userRole" 
+                  required 
+                  class="w-full bg-zinc-950/60 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:border-cyan-500/80 outline-none transition-all duration-200">
+                  <option value="USER">USER (Operator)</option>
+                  <option value="ADMIN">ADMIN (Administrator)</option>
+                </select>
+              </div>
+
+              <!-- Active switch -->
+              <div class="flex items-center gap-2.5 border border-zinc-800/60 bg-zinc-950/30 rounded-xl p-3 mt-1">
+                <input 
+                  type="checkbox" 
+                  id="active_mod" 
+                  name="active" 
+                  [(ngModel)]="userActive" 
+                  class="h-4.5 w-4.5 accent-cyan-500 cursor-pointer rounded bg-zinc-900 border-zinc-800 text-cyan-500" />
+                <div class="flex flex-col">
+                  <label for="active_mod" class="font-bold text-zinc-300 cursor-pointer">Account Enabled</label>
+                  <span class="text-[10px] text-zinc-550">Allows operator to log in and use tools.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="flex justify-end gap-2.5 border-t border-zinc-800/80 pt-4 mt-2">
+              <button 
+                type="button" 
+                (click)="closeModal()" 
+                class="px-4.5 py-2.5 rounded-xl border border-zinc-800 hover:border-zinc-700 bg-zinc-950/40 text-zinc-400 hover:text-white transition-all cursor-pointer">
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                [disabled]="!userFormModern.form?.valid" 
+                class="px-5 py-2.5 rounded-xl text-white font-bold bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 transition-all cursor-pointer">
+                {{ modalMode() === 'add' ? 'Create User' : 'Save Changes' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <!-- Modern Toast Notifications -->
+    @if (toast(); as t) {
+      <div class="fixed bottom-6 right-6 z-50 animate-slide-up">
+        <div 
+          [class.bg-emerald-950/80]="t.type === 'success'"
+          [class.border-emerald-500/50]="t.type === 'success'"
+          [class.text-emerald-300]="t.type === 'success'"
+          [class.bg-rose-950/80]="t.type === 'error'"
+          [class.border-rose-500/50]="t.type === 'error'"
+          [class.text-rose-300]="t.type === 'error'"
+          [class.bg-zinc-900/90]="t.type === 'info'"
+          [class.border-cyan-500/50]="t.type === 'info'"
+          [class.text-cyan-300]="t.type === 'info'"
+          class="flex items-center gap-3 px-5 py-4 border backdrop-blur-xl rounded-xl shadow-2xl">
+          <span class="text-sm font-medium">{{ t.message }}</span>
+        </div>
+      </div>
+    }
+  </div>
+}
