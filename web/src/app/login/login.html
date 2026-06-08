@@ -1,10 +1,14 @@
 <!-- Floating Theme Switcher Button -->
-<div class="fixed top-4 right-4 z-50">
+<div class="fixed top-10 right-4 z-50">
   <button 
     type="button" 
     (click)="themeService.toggleTheme()"
     [class]="themeService.currentTheme() === 'xp' ? 'xp-btn font-xp' : 'inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 rounded-xl transition-all duration-200 cursor-pointer'">
-    Switch to {{ themeService.currentTheme() === 'xp' ? 'Modern Theme' : 'Retro Theme' }}
+    @if (themeService.currentTheme() === 'xp') {
+      🎨 Switch Theme (Current: Windows XP)
+    } @else {
+      <img src="/icons/theme.svg" class="w-4 h-4" alt="theme" /> Switch Theme (Current: Modern)
+    }
   </button>
 </div>
 
