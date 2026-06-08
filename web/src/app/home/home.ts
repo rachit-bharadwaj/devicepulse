@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { ThemeService } from '../services/theme.service';
+import { environment } from '../../environments/environment';
 
 export interface Device {
   id?: number;
@@ -27,7 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8000/device';
+  private readonly baseUrl = `${environment.apiUrl}/device`;
 
   // State
   devices = signal<Device[]>([]);
@@ -301,7 +302,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private ws: WebSocket | null = null;
 
   connectWebSocket() {
-    const wsUrl = 'ws://localhost:8000/ws';
+    const wsUrl = `${environment.wsUrl}/ws`;
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {

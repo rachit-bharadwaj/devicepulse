@@ -2,6 +2,7 @@ import { Injectable, inject, signal, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 export interface User {
   id: number;
@@ -31,7 +32,7 @@ export interface RegisterResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly baseUrl = 'http://localhost:8000';
+  private readonly baseUrl = environment.apiUrl;
 
   // Signals for application-wide authentication state
   currentUser = signal<User | null>(null);
