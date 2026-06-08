@@ -50,6 +50,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   toast = signal<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   ngOnInit() {
+    if (typeof window === 'undefined') {
+      return;
+    }
     // Auth Guard check
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
