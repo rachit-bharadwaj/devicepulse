@@ -1,392 +1,755 @@
-<div class="relative min-h-screen bg-zinc-950 text-white font-sans overflow-x-hidden">
-  
-  <!-- Glowing Background Blobs -->
-  <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-cyan-500/5 blur-[150px] pointer-events-none"></div>
-  <div class="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-[150px] pointer-events-none"></div>
-
-  <!-- Header Navigation -->
-  <header class="sticky top-0 z-40 bg-zinc-900/40 border-b border-zinc-800/80 backdrop-blur-xl px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 shadow-inner">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" class="w-6 h-6 stroke-cyan-400">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M3 12h1.5L8 4.5 12 19.5l4-11.25L19.5 15H21" />
-        </svg>
-      </div>
-      <div>
-        <h1 class="text-lg font-bold tracking-tight text-white leading-none">DEVICE PULSE</h1>
-        <span class="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">Diagnostics Center</span>
-      </div>
-    </div>
+@if (themeService.currentTheme() === 'xp') {
+  <!-- ==================== WINDOWS XP EXPLORER THEME ==================== -->
+  <div class="xp-desktop min-h-screen text-black font-xp p-3 pb-16">
     
-    <div class="flex items-center gap-4">
-      <div class="hidden md:flex flex-col items-end">
-        <span class="text-sm font-semibold text-zinc-200">{{ authService.currentUser()?.username }}</span>
-        <span class="text-xs text-zinc-500 font-medium capitalize">{{ authService.currentUser()?.role || 'operator' }}</span>
-      </div>
-      <button 
-        type="button" 
-        (click)="logout()"
-        class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/60 rounded-xl transition-all duration-200 cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-        </svg>
-        Sign Out
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Content Dashboard -->
-  <main class="max-w-7xl mx-auto p-6 md:p-8 space-y-8">
-    
-    <!-- Status Stats Grid -->
-    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      
-      <!-- Stat Card 1 -->
-      <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-cyan-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
-        <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Total Nodes</span>
-        <div class="text-3xl font-bold mt-2 text-white">{{ devices().length }}</div>
-        <p class="text-xs text-zinc-400 mt-1">Configured diagnostics nodes</p>
-      </div>
-
-      <!-- Stat Card 2 -->
-      <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
-        <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Online Nodes</span>
-        <div class="text-3xl font-bold mt-2 text-emerald-400 flex items-center gap-2">
-          {{ onlineDevicesCount() }}
-          <span class="flex h-3.5 w-3.5 relative">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+    <!-- Main Explorer Window -->
+    <div class="xp-window w-full min-h-[calc(100vh-64px)] flex flex-col">
+      <!-- Title Bar -->
+      <div class="xp-title-bar">
+        <div class="xp-title-text font-xp">
+          <span class="inline-flex gap-0.5 text-xs mr-1">
+            <span class="w-1.5 h-1.5 bg-[#f05032]"></span>
+            <span class="w-1.5 h-1.5 bg-[#7fba00]"></span>
           </span>
+          Network Connections - Device Pulse
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Broadcasting status online</p>
-      </div>
-
-      <!-- Stat Card 3 -->
-      <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-amber-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
-        <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">System Health</span>
-        <div class="text-3xl font-bold mt-2 text-cyan-300">98.4%</div>
-        <p class="text-xs text-zinc-400 mt-1">Optimal execution parameters</p>
-      </div>
-
-      <!-- Stat Card 4 -->
-      <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-indigo-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
-        <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Avg Latency</span>
-        <div class="text-3xl font-bold mt-2 text-indigo-400">12ms</div>
-        <p class="text-xs text-zinc-400 mt-1">Diagnostic loop time</p>
-      </div>
-
-    </section>
-
-    <!-- Devices Monitoring Table Section -->
-    <section class="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md p-6">
-      
-      <!-- Table Header actions -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h2 class="text-xl font-bold text-white tracking-tight">Diagnostics Inventory</h2>
-          <p class="text-zinc-400 text-xs mt-0.5">Add, monitor, and remove devices on the local grid network.</p>
+        <div class="xp-title-buttons">
+          <button type="button" class="xp-btn-min" disabled>_</button>
+          <button type="button" class="xp-btn-max" disabled>[]</button>
+          <button type="button" class="xp-btn-close" (click)="logout()">X</button>
         </div>
-        <div class="flex items-center gap-3">
-          <button 
-            type="button" 
-            (click)="fetchDevices()"
-            class="p-2.5 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-xl text-zinc-400 hover:text-white transition-all cursor-pointer"
-            title="Refresh Grid">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" [class.animate-spin]="loading()">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
+      </div>
+
+      <!-- Toolbar & Address Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-3 py-1.5 bg-[#ece9d8] border-b border-[#d6d3c2] text-xs font-xp">
+        <!-- Standard Toolbar Buttons -->
+        <div class="flex items-center gap-1">
+          <button type="button" (click)="fetchDevices()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp">
+            <span class="text-sm">🔄</span> Refresh
           </button>
-          <button 
-            type="button" 
-            (click)="openAddModal()"
-            class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 shadow-md shadow-cyan-950/20 active:scale-[0.98] rounded-xl transition-all cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Device
+          <div class="h-4 w-[1px] bg-[#a0a0a0] mx-1"></div>
+          <button type="button" (click)="openAddModal()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp">
+            <span class="text-sm">➕</span> Add Device
+          </button>
+          <div class="h-4 w-[1px] bg-[#a0a0a0] mx-1"></div>
+          <button type="button" (click)="themeService.toggleTheme()" class="xp-btn px-2 py-0.5 flex items-center gap-1 font-xp font-bold">
+            <span class="text-sm">🎨</span> Modern Theme
           </button>
         </div>
+
+        <!-- Address Input -->
+        <div class="flex items-center gap-1.5 flex-1 max-w-md w-full">
+          <span class="text-zinc-500 text-xs font-xp">Address</span>
+          <input 
+            type="text" 
+            [(ngModel)]="addressBarValue" 
+            (keydown.enter)="navigateAddress()"
+            class="xp-bevel-in flex-1 px-2 py-0.5 text-xs bg-white border border-[#a0a0a0] text-zinc-800 focus:outline-none focus:ring-0 w-full font-xp h-[22px]" />
+          <button type="button" (click)="navigateAddress()" class="xp-btn py-0.5 px-2 font-xp h-[22px] flex items-center justify-center">Go</button>
+        </div>
       </div>
 
-      <!-- Loading State -->
-      @if (loading() && devices().length === 0) {
-        <div class="flex flex-col items-center justify-center py-20 space-y-4">
-          <svg class="animate-spin h-10 w-10 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <p class="text-zinc-400 text-sm">Querying active network configurations...</p>
-        </div>
-      } @else if (devices().length === 0) {
-        <!-- Empty State -->
-        <div class="text-center py-16 border-2 border-dashed border-zinc-800 rounded-2xl">
-          <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-500 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 7.5v.008H12.75V7.5zm0 2.25v.008H12.75V9.75zm0 2.25v.008H12.75v-.008zm0 2.25v.008H12.75V14.25zm-6.75-6.75h.008v.008H6V7.5zm0 2.25h.008v.008H6V9.75zm0 2.25h.008v.008H6v-.008zm0 2.25h.008v.008H6V14.25zm11.25-6.75h.008v.008h-.008V7.5zm0 2.25h.008v.008h-.008V9.75z" />
-            </svg>
-          </div>
-          <h3 class="text-base font-bold text-zinc-300">No devices on grid</h3>
-          <p class="text-zinc-500 text-xs max-w-sm mx-auto mt-1">Connect your routers, servers, or nodes to start real-time diagnostics monitoring.</p>
-          <button 
-            type="button" 
-            (click)="openAddModal()"
-            class="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl transition-all cursor-pointer">
-            Add First Device
-          </button>
-        </div>
-      } @else {
-        <!-- Device Grid Table -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-zinc-800/80 text-zinc-500 text-xs font-semibold uppercase tracking-wider">
-                <th class="py-4 px-4">Device Details</th>
-                <th class="py-4 px-4">Network Info</th>
-                <th class="py-4 px-4">Type</th>
-                <th class="py-4 px-4">Status</th>
-                <th class="py-4 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-800/40">
-              @for (device of devices(); track device.id) {
-                <tr class="hover:bg-zinc-900/20 transition-all group">
-                  
-                  <!-- Name & Desc -->
-                  <td class="py-4 px-4">
-                    <div class="font-bold text-white text-sm">{{ device.name }}</div>
-                    <div class="text-zinc-500 text-xs mt-0.5 max-w-xs truncate" [title]="device.description">{{ device.description || 'No description provided' }}</div>
-                  </td>
-                  
-                  <!-- IP Address -->
-                  <td class="py-4 px-4">
-                    <code class="text-zinc-300 text-xs font-mono bg-zinc-950/60 border border-zinc-800/60 rounded px-1.5 py-0.5">{{ device.ip_address }}</code>
-                  </td>
-
-                  <!-- Type -->
-                  <td class="py-4 px-4">
-                    <span class="text-xs text-zinc-400 font-medium bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1">
-                      {{ device.type }}
-                    </span>
-                  </td>
-
-                  <!-- Status -->
-                  <td class="py-4 px-4">
-                    <span 
-                      [class.bg-emerald-950/80]="device.status === 'Online' || device.status === 'UP'"
-                      [class.border-emerald-500/50]="device.status === 'Online' || device.status === 'UP'"
-                      [class.text-emerald-300]="device.status === 'Online' || device.status === 'UP'"
-                      [class.bg-amber-950/80]="device.status === 'Warning'"
-                      [class.border-amber-500/50]="device.status === 'Warning'"
-                      [class.text-amber-300]="device.status === 'Warning'"
-                      [class.bg-rose-950/80]="device.status === 'Offline' || device.status === 'DOWN'"
-                      [class.border-rose-500/50]="device.status === 'Offline' || device.status === 'DOWN'"
-                      [class.text-rose-300]="device.status === 'Offline' || device.status === 'DOWN'"
-                      class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border backdrop-blur-md">
-                      
-                      <span 
-                        [class.bg-emerald-400]="device.status === 'Online' || device.status === 'UP'"
-                        [class.bg-amber-400]="device.status === 'Warning'"
-                        [class.bg-rose-400]="device.status === 'Offline' || device.status === 'DOWN'"
-                        class="h-1.5 w-1.5 rounded-full"></span>
-                      {{ device.status }}
-                    </span>
-                  </td>
-
-                  <!-- Actions -->
-                  <td class="py-4 px-4 text-right">
-                    <div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-200">
-                      <button 
-                        type="button" 
-                        (click)="openEditModal(device)"
-                        class="p-2 text-zinc-400 hover:text-cyan-400 bg-zinc-950/40 hover:bg-zinc-800/80 border border-zinc-800/50 hover:border-cyan-500/20 rounded-xl transition-all cursor-pointer"
-                        title="Edit Device">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                        </svg>
-                      </button>
-                      <button 
-                        type="button" 
-                        (click)="deleteDevice(device.id!)"
-                        class="p-2 text-zinc-400 hover:text-rose-400 bg-zinc-950/40 hover:bg-zinc-800/80 border border-zinc-800/50 hover:border-rose-500/20 rounded-xl transition-all cursor-pointer"
-                        title="Remove Device">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0M4.5 12h15" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
-
-    </section>
-
-  </main>
-
-  <!-- Add/Edit Device Glassmorphic Modal -->
-  @if (showModal()) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm animate-fade-in">
-      
-      <div class="w-full max-w-lg bg-zinc-900 border border-zinc-800/80 rounded-2xl p-6 md:p-8 shadow-2xl relative">
+      <!-- Explorer Window Body -->
+      <div class="flex flex-1 xp-window-inner p-1">
         
-        <!-- Modal Close Button -->
+        <!-- Left Sidebar (Explorer Task Pane style) -->
+        <div class="w-60 bg-[#7b9ed6] border-r border-[#6982b5] p-2 hidden md:flex flex-col gap-3">
+          
+          <!-- Task Group 1: System Tasks -->
+          <div class="border border-[#7b9ed6] rounded bg-white shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-[#215dc6] to-[#6091e6] text-white font-bold text-xs p-1.5 select-none flex items-center justify-between">
+              <span>System Tasks</span>
+              <span class="text-[9px]">▼</span>
+            </div>
+            <div class="p-2 flex flex-col gap-1.5 text-xs bg-[#eef3fb] text-black">
+              <button (click)="openAddModal()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>➕</span> Add a new device
+              </button>
+              <button (click)="fetchDevices()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>🔄</span> Refresh grid status
+              </button>
+              <button (click)="themeService.toggleTheme()" class="text-left text-[#003c74] hover:underline hover:text-[#0058e6] flex items-center gap-1.5 cursor-pointer font-xp font-bold">
+                <span>🎨</span> Switch to Modern Theme
+              </button>
+            </div>
+          </div>
+
+          <!-- Task Group 2: User Account -->
+          <div class="border border-[#7b9ed6] rounded bg-white shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-[#215dc6] to-[#6091e6] text-white font-bold text-xs p-1.5 select-none flex items-center justify-between">
+              <span>Session Operator</span>
+              <span class="text-[9px]">▼</span>
+            </div>
+            <div class="p-2 flex flex-col gap-1 text-xs bg-[#eef3fb] text-black leading-snug">
+              <div class="font-bold text-[#003c74] font-xp">{{ authService.currentUser()?.username }}</div>
+              <div class="text-zinc-600 capitalize font-xp">Role: {{ authService.currentUser()?.role || 'operator' }}</div>
+              <div class="h-[1px] bg-zinc-300 my-1"></div>
+              <button (click)="logout()" class="text-left text-red-700 hover:underline flex items-center gap-1.5 cursor-pointer font-xp">
+                <span>🚪</span> Log off session
+              </button>
+            </div>
+          </div>
+
+          <!-- Task Group 3: System Stats -->
+          <div class="border border-[#7b9ed6] rounded bg-white shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-[#215dc6] to-[#6091e6] text-white font-bold text-xs p-1.5 select-none flex items-center justify-between">
+              <span>System Performance</span>
+              <span class="text-[9px]">▼</span>
+            </div>
+            <div class="p-2 flex flex-col gap-2 text-xs bg-[#eef3fb] text-black">
+              <div>
+                 <div class="text-zinc-500 font-semibold uppercase tracking-wider text-[10px] font-xp">Total Configured</div>
+                 <div class="text-sm font-bold text-[#003c74] font-xp">{{ devices().length }} nodes</div>
+              </div>
+              <div>
+                 <div class="text-zinc-500 font-semibold uppercase tracking-wider text-[10px] font-xp">Active Online</div>
+                 <div class="text-sm font-bold text-[#2d8a2d] flex items-center gap-1.5 font-xp">
+                   {{ onlineDevicesCount() }}
+                   <span class="inline-flex w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                 </div>
+              </div>
+              <div>
+                 <div class="text-zinc-500 font-semibold uppercase tracking-wider text-[10px] font-xp">Avg Latency</div>
+                 <div class="text-sm font-bold text-[#a04010] font-xp">12ms</div>
+              </div>
+              <div>
+                 <div class="text-zinc-500 font-semibold uppercase tracking-wider text-[10px] font-xp">System Health</div>
+                 <div class="text-sm font-bold text-[#0058e6] font-xp">98.4%</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Content Area -->
+        <div class="flex-1 bg-white border border-[#808080] p-3 overflow-y-auto flex flex-col gap-4">
+          
+          <!-- Welcome banner inside explorer -->
+          <div class="border-b border-zinc-200 pb-3">
+            <h2 class="text-base font-bold text-[#003c74] font-xp">Network Diagnostics Inventory</h2>
+            <p class="text-xs text-zinc-500 font-xp">This folder displays all active grid servers, network elements, and client nodes connected to the local network.</p>
+          </div>
+
+          <!-- Loader or empty state or table -->
+          @if (loading() && devices().length === 0) {
+            <div class="flex flex-col items-center justify-center py-20 gap-3">
+              <span class="text-lg animate-bounce">⏳</span>
+              <p class="text-xs text-zinc-500 font-xp">Querying active network configurations...</p>
+            </div>
+          } @else if (devices().length === 0) {
+            <div class="text-center py-16 border-2 border-dashed border-[#c0c0c0] bg-[#f1efe2] rounded-md">
+              <span class="text-3xl">📁</span>
+              <h3 class="text-xs font-bold text-zinc-700 mt-2 font-xp">No active devices</h3>
+              <p class="text-xs text-zinc-500 mt-1 max-w-sm mx-auto font-xp">Click "Add Device" on the toolbar or sidebar to initialize a new device configuration.</p>
+              <button type="button" (click)="openAddModal()" class="xp-btn mt-4">Add Device</button>
+            </div>
+          } @else {
+            <!-- Table Styled like Windows XP File Explorer "Details" view -->
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse border border-[#c0c0c0] text-xs text-black font-xp">
+                <thead>
+                  <tr class="bg-[#ece9d8] text-[#000] font-normal border-b border-[#a0a0a0] select-none text-left">
+                    <th class="py-1.5 px-2 border-r border-[#c0c0c0] font-normal cursor-pointer hover:bg-white font-xp">Name</th>
+                    <th class="py-1.5 px-2 border-r border-[#c0c0c0] font-normal cursor-pointer hover:bg-white font-xp">IP Address</th>
+                    <th class="py-1.5 px-2 border-r border-[#c0c0c0] font-normal cursor-pointer hover:bg-white font-xp">Type</th>
+                    <th class="py-1.5 px-2 border-r border-[#c0c0c0] font-normal cursor-pointer hover:bg-white font-xp">Status</th>
+                    <th class="py-1.5 px-2 font-normal text-right font-xp">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (device of devices(); track device.id) {
+                    <tr class="border-b border-[#e0e0e0] hover:bg-[#316ac5] hover:text-white group odd:bg-[#fafafa] transition-colors">
+                      <!-- Name & Description -->
+                      <td class="py-2 px-2 border-r border-[#e0e0e0] font-xp max-w-xs">
+                        <div class="flex items-center gap-2">
+                          <span class="text-base">🖥️</span>
+                          <div>
+                            <div class="font-bold font-xp">{{ device.name }}</div>
+                            <div class="text-[10px] opacity-70 group-hover:text-zinc-200 font-xp">{{ device.description || 'No description' }}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <!-- IP Address -->
+                      <td class="py-2 px-2 border-r border-[#e0e0e0] font-mono">
+                        {{ device.ip_address }}
+                      </td>
+                      <!-- Type -->
+                      <td class="py-2 px-2 border-r border-[#e0e0e0] font-xp">
+                        {{ device.type }}
+                      </td>
+                      <!-- Status -->
+                      <td class="py-2 px-2 border-r border-[#e0e0e0] font-xp">
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-bold"
+                              [class.bg-emerald-100]="device.status === 'Online' || device.status === 'UP'"
+                              [class.border-emerald-400]="device.status === 'Online' || device.status === 'UP'"
+                              [class.text-emerald-700]="device.status === 'Online' || device.status === 'UP'"
+                              [class.bg-rose-100]="device.status === 'Offline' || device.status === 'DOWN'"
+                              [class.border-rose-400]="device.status === 'Offline' || device.status === 'DOWN'"
+                              [class.text-rose-700]="device.status === 'Offline' || device.status === 'DOWN'"
+                              [class.bg-amber-100]="device.status === 'Warning'"
+                              [class.border-amber-400]="device.status === 'Warning'"
+                              [class.text-amber-700]="device.status === 'Warning'">
+                          <span class="w-1.5 h-1.5 rounded-full"
+                                [class.bg-emerald-500]="device.status === 'Online' || device.status === 'UP'"
+                                [class.bg-rose-500]="device.status === 'Offline' || device.status === 'DOWN'"
+                                [class.bg-amber-500]="device.status === 'Warning'"></span>
+                          {{ device.status }}
+                        </span>
+                      </td>
+                      <!-- Actions -->
+                      <td class="py-2 px-2 text-right">
+                        <div class="inline-flex gap-1">
+                          <button (click)="openEditModal(device)" class="xp-btn py-0.5 px-2 text-[10px] group-hover:bg-white group-hover:text-black">
+                            Edit
+                          </button>
+                          <button (click)="deleteDevice(device.id!)" class="xp-btn py-0.5 px-2 text-[10px] text-red-700 hover:text-red-900 group-hover:bg-white group-hover:text-red-700">
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Add/Edit Device Windows XP Modal -->
+    @if (showModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45">
+        <div class="xp-window w-full max-w-md">
+          <!-- Title Bar -->
+          <div class="xp-title-bar">
+            <div class="xp-title-text font-xp">
+              {{ modalMode() === 'add' ? 'Add Diagnostics Node' : 'Update Node Configuration' }}
+            </div>
+            <div class="xp-title-buttons">
+              <button type="button" class="xp-btn-close" (click)="closeModal()">X</button>
+            </div>
+          </div>
+
+          <!-- Inner Window -->
+          <div class="xp-window-inner p-4 flex flex-col gap-4">
+            <form (ngSubmit)="onSubmitDevice()" #deviceFormXp="ngForm" class="flex flex-col gap-4 text-xs">
+              
+              <!-- Node Name -->
+              <div class="grid grid-cols-3 items-center gap-2">
+                <label for="dName_xp" class="xp-label text-right pr-2">Node Name:</label>
+                <input 
+                  type="text" 
+                  id="dName_xp" 
+                  name="deviceName"
+                  [(ngModel)]="deviceName"
+                  required
+                  placeholder="e.g. Server-01" 
+                  class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp" />
+              </div>
+
+              <!-- IP Address -->
+              <div class="grid grid-cols-3 items-center gap-2">
+                <label for="dIp_xp" class="xp-label text-right pr-2">IP Address:</label>
+                <input 
+                  type="text" 
+                  id="dIp_xp" 
+                  name="deviceIp"
+                  [(ngModel)]="deviceIp"
+                  required
+                  placeholder="e.g. 192.168.1.10" 
+                  class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp" />
+              </div>
+
+              <!-- Node Type Selection -->
+              <div class="grid grid-cols-3 items-center gap-2">
+                <label for="dType_xp" class="xp-label text-right pr-2">Node Type:</label>
+                <select 
+                  id="dType_xp" 
+                  name="deviceType"
+                  [(ngModel)]="deviceType"
+                  class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp bg-white py-1">
+                  <option value="Server">Server</option>
+                  <option value="Router">Router</option>
+                  <option value="Switch">Switch</option>
+                  <option value="IoT Node">IoT Node</option>
+                </select>
+              </div>
+
+              <!-- Initial Status Selection -->
+              <div class="grid grid-cols-3 items-center gap-2">
+                <label for="dStatus_xp" class="xp-label text-right pr-2">Initial Status:</label>
+                <select 
+                  id="dStatus_xp" 
+                  name="deviceStatus"
+                  [(ngModel)]="deviceStatus"
+                  class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp bg-white py-1">
+                  <option value="UP">UP</option>
+                  <option value="DOWN">DOWN</option>
+                </select>
+              </div>
+
+              <!-- Description -->
+              <div class="grid grid-cols-3 items-start gap-2">
+                <label for="dDesc_xp" class="xp-label text-right pr-2 pt-1">Description:</label>
+                <textarea 
+                  id="dDesc_xp" 
+                  name="deviceDesc"
+                  [(ngModel)]="deviceDesc"
+                  placeholder="Provide location context..." 
+                  rows="3"
+                  class="xp-input col-span-2 xp-bevel-in w-full text-xs font-xp"></textarea>
+              </div>
+
+              <!-- Form Submit Buttons -->
+              <div class="flex justify-end gap-2 border-t border-[#c0c0c0] pt-3 mt-2">
+                <button 
+                  type="submit" 
+                  [disabled]="loading() || !deviceFormXp.form?.valid"
+                  class="xp-btn min-w-[80px]">
+                  {{ modalMode() === 'add' ? 'Add Node' : 'Save' }}
+                </button>
+                <button type="button" (click)="closeModal()" class="xp-btn min-w-[80px]">Cancel</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Taskbar Tray Balloon Notification System -->
+    @if (toast(); as t) {
+      <div class="fixed bottom-12 right-6 z-50 border border-black bg-[#ffffea] p-3 rounded-lg shadow-lg max-w-[260px] animate-slide-up flex gap-3 text-black">
+        <span class="text-base select-none">💬</span>
+        <div class="flex-1">
+          <div class="flex justify-between items-center -mt-1">
+            <span class="text-[10px] font-bold text-[#003c74] font-xp">Device Pulse Notification</span>
+            <button (click)="toast.set(null)" class="text-[9px] font-extrabold hover:text-red-600 px-1 cursor-pointer">X</button>
+          </div>
+          <p class="text-xs mt-1 font-xp leading-normal">{{ t.message }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- Windows XP Classic Bottom Taskbar -->
+    <div class="xp-taskbar">
+      <button type="button" (click)="openAddModal()" class="xp-start-btn font-xp">
+        <span>🟢</span> start
+      </button>
+      <div class="flex-1 px-4 flex items-center gap-2 overflow-hidden h-full">
+        <!-- Active Explorer Window Tab indicator -->
+        <div class="bg-[#3d7bf4] text-white border border-[#245dd7] px-3 py-1 text-xs font-bold rounded flex items-center gap-1.5 select-none h-[80%] cursor-default animate-pulse-slow">
+          <span>📁</span> Network Connections
+        </div>
+      </div>
+      <!-- System Tray -->
+      <div class="bg-[#0c8bee] border-l-2 border-[#1258d3] h-full px-3 flex items-center gap-2 select-none">
+        <span class="text-[10px] font-bold text-white font-xp">🔒 Secure Connection</span>
+        <span class="text-xs font-bold text-white font-xp">10:24 AM</span>
+      </div>
+    </div>
+
+  </div>
+} @else {
+  <!-- ==================== MODERN DARK THEME ==================== -->
+  <div class="relative min-h-screen bg-zinc-950 text-white font-sans overflow-x-hidden">
+    
+    <!-- Glowing Background Blobs -->
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-cyan-500/5 blur-[150px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-[150px] pointer-events-none"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-zinc-900/40 border-b border-zinc-800/80 backdrop-blur-xl px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 shadow-inner">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" class="w-6 h-6 stroke-cyan-400">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M3 12h1.5L8 4.5 12 19.5l4-11.25L19.5 15H21" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white leading-none">DEVICE PULSE</h1>
+          <span class="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">Diagnostics Center</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <div class="hidden md:flex flex-col items-end">
+          <span class="text-sm font-semibold text-zinc-200">{{ authService.currentUser()?.username }}</span>
+          <span class="text-xs text-zinc-500 font-medium capitalize">{{ authService.currentUser()?.role || 'operator' }}</span>
+        </div>
         <button 
           type="button" 
-          (click)="closeModal()"
-          class="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          (click)="themeService.toggleTheme()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/60 rounded-xl transition-all duration-200 cursor-pointer">
+          Switch to Retro Theme
         </button>
+        <button 
+          type="button" 
+          (click)="logout()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/60 rounded-xl transition-all duration-200 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+          </svg>
+          Sign Out
+        </button>
+      </div>
+    </header>
 
-        <!-- Title -->
-        <div class="mb-6">
-          <h3 class="text-xl font-bold text-white">{{ modalMode() === 'add' ? 'Add Diagnostics Node' : 'Update Node Configuration' }}</h3>
-          <p class="text-zinc-400 text-xs mt-1">Configure node access details and physical description.</p>
+    <!-- Main Content Dashboard -->
+    <main class="max-w-7xl mx-auto p-6 md:p-8 space-y-8">
+      
+      <!-- Status Stats Grid -->
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        
+        <!-- Stat Card 1 -->
+        <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-16 h-16 bg-cyan-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Total Nodes</span>
+          <div class="text-3xl font-bold mt-2 text-white">{{ devices().length }}</div>
+          <p class="text-xs text-zinc-400 mt-1">Configured diagnostics nodes</p>
         </div>
 
-        <!-- Form -->
-        <form (ngSubmit)="onSubmitDevice()" #deviceForm="ngForm" class="space-y-5">
-          
-          <!-- Device Name -->
+        <!-- Stat Card 2 -->
+        <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Online Nodes</span>
+          <div class="text-3xl font-bold mt-2 text-emerald-400 flex items-center gap-2">
+            {{ onlineDevicesCount() }}
+            <span class="flex h-3.5 w-3.5 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+            </span>
+          </div>
+          <p class="text-xs text-zinc-400 mt-1">Broadcasting status online</p>
+        </div>
+
+        <!-- Stat Card 3 -->
+        <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-16 h-16 bg-amber-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">System Health</span>
+          <div class="text-3xl font-bold mt-2 text-cyan-300">98.4%</div>
+          <p class="text-xs text-zinc-400 mt-1">Optimal execution parameters</p>
+        </div>
+
+        <!-- Stat Card 4 -->
+        <div class="p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-16 h-16 bg-indigo-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Avg Latency</span>
+          <div class="text-3xl font-bold mt-2 text-indigo-400">12ms</div>
+          <p class="text-xs text-zinc-400 mt-1">Diagnostic loop time</p>
+        </div>
+
+      </section>
+
+      <!-- Devices Monitoring Table Section -->
+      <section class="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl backdrop-blur-md p-6">
+        
+        <!-- Table Header actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <label for="dName" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Node Name</label>
-            <input 
-              type="text" 
-              id="dName" 
-              name="deviceName"
-              [(ngModel)]="deviceName"
-              placeholder="e.g. Server-01" 
-              required
-              class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm" />
+            <h2 class="text-xl font-bold text-white tracking-tight">Diagnostics Inventory</h2>
+            <p class="text-zinc-400 text-xs mt-0.5">Add, monitor, and remove devices on the local grid network.</p>
           </div>
-
-          <!-- IP Address -->
-          <div>
-            <label for="dIp" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">IP Address</label>
-            <input 
-              type="text" 
-              id="dIp" 
-              name="deviceIp"
-              [(ngModel)]="deviceIp"
-              placeholder="e.g. 192.168.1.10" 
-              required
-              class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm" />
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            
-            <!-- Type Dropdown -->
-            <div>
-              <label for="dType" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Node Type</label>
-              <select 
-                id="dType" 
-                name="deviceType"
-                [(ngModel)]="deviceType"
-                class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm cursor-pointer">
-                <option value="Server">Server</option>
-                <option value="Router">Router</option>
-                <option value="Switch">Switch</option>
-                <option value="IoT Node">IoT Node</option>
-              </select>
-            </div>
-
-            <!-- Status Dropdown -->
-            <div>
-              <label for="dStatus" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Initial Status</label>
-              <select 
-                id="dStatus" 
-                name="deviceStatus"
-                [(ngModel)]="deviceStatus"
-                class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm cursor-pointer">
-                <option value="UP">UP</option>
-                <option value="DOWN">DOWN</option>
-              </select>
-            </div>
-
-          </div>
-
-          <!-- Description -->
-          <div>
-            <label for="dDesc" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Description</label>
-            <textarea 
-              id="dDesc" 
-              name="deviceDesc"
-              [(ngModel)]="deviceDesc"
-              placeholder="Provide context or physical location..." 
-              rows="3"
-              class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm"></textarea>
-          </div>
-
-          <!-- Action buttons -->
-          <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800/80">
+          <div class="flex items-center gap-3">
             <button 
               type="button" 
-              (click)="closeModal()"
-              class="px-5 py-2.5 rounded-xl border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/40 text-sm font-semibold text-zinc-300 hover:text-white cursor-pointer transition-all">
-              Cancel
+              (click)="fetchDevices()"
+              class="p-2.5 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-xl text-zinc-400 hover:text-white transition-all cursor-pointer"
+              title="Refresh Grid">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" [class.animate-spin]="loading()">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
             </button>
             <button 
-              type="submit"
-              [disabled]="loading() || !deviceForm.form.valid"
-              class="px-5 py-2.5 rounded-xl text-white font-semibold bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 disabled:opacity-50 disabled:pointer-events-none text-sm cursor-pointer shadow-lg transition-all flex items-center gap-2">
-              @if (loading()) {
-                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              } @else {
-                {{ modalMode() === 'add' ? 'Add Node' : 'Save Changes' }}
-              }
+              type="button" 
+              (click)="openAddModal()"
+              class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 shadow-md shadow-cyan-950/20 active:scale-[0.98] rounded-xl transition-all cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Device
             </button>
           </div>
+        </div>
 
-        </form>
-
-      </div>
-    </div>
-  }
-
-  <!-- Beautiful Toast Notifications -->
-  @if (toast(); as t) {
-    <div class="fixed bottom-6 right-6 z-50 animate-slide-up">
-      <div 
-        [class.bg-emerald-950/80]="t.type === 'success'"
-        [class.border-emerald-500/50]="t.type === 'success'"
-        [class.text-emerald-300]="t.type === 'success'"
-        [class.bg-rose-950/80]="t.type === 'error'"
-        [class.border-rose-500/50]="t.type === 'error'"
-        [class.text-rose-300]="t.type === 'error'"
-        [class.bg-zinc-900/90]="t.type === 'info'"
-        [class.border-cyan-500/50]="t.type === 'info'"
-        [class.text-cyan-300]="t.type === 'info'"
-        class="flex items-center gap-3 px-5 py-4 border backdrop-blur-xl rounded-xl shadow-2xl transition-all duration-300">
-        
-        @if (t.type === 'success') {
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-emerald-400">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        } @else if (t.type === 'error') {
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-rose-400">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
+        <!-- Loading State -->
+        @if (loading() && devices().length === 0) {
+          <div class="flex flex-col items-center justify-center py-20 space-y-4">
+            <svg class="animate-spin h-10 w-10 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-zinc-400 text-sm">Querying active network configurations...</p>
+          </div>
+        } @else if (devices().length === 0) {
+          <!-- Empty State -->
+          <div class="text-center py-16 border-2 border-dashed border-zinc-800 rounded-2xl">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-500 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 7.5v.008H12.75V7.5zm0 2.25v.008H12.75V9.75zm0 2.25v.008H12.75v-.008zm0 2.25v.008H12.75V14.25zm-6.75-6.75h.008v.008H6V7.5zm0 2.25h.008v.008H6V9.75zm0 2.25h.008v.008H6v-.008zm0 2.25h.008v.008H6V14.25zm11.25-6.75h.008v.008h-.008V7.5zm0 2.25h.008v.008h-.008V9.75z" />
+              </svg>
+            </div>
+            <h3 class="text-base font-bold text-zinc-300">No devices on grid</h3>
+            <p class="text-zinc-500 text-xs max-w-sm mx-auto mt-1">Connect your routers, servers, or nodes to start real-time diagnostics monitoring.</p>
+            <button 
+              type="button" 
+              (click)="openAddModal()"
+              class="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl transition-all cursor-pointer">
+              Add First Device
+            </button>
+          </div>
         } @else {
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-cyan-400">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.083 1.083l-1.083 1.083A.75.75 0 0110.5 13.5v-2.25c0-.414.336-.75.75-.75zM12 7.5a.75.75 0 100-1.5.75.75 0 000 1.5zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        }
-        <span class="text-sm font-medium">{{ t.message }}</span>
-      </div>
-    </div>
-  }
+          <!-- Device Grid Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-zinc-800/80 text-zinc-500 text-xs font-semibold uppercase tracking-wider">
+                  <th class="py-4 px-4">Device Details</th>
+                  <th class="py-4 px-4">Network Info</th>
+                  <th class="py-4 px-4">Type</th>
+                  <th class="py-4 px-4">Status</th>
+                  <th class="py-4 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-800/40">
+                @for (device of devices(); track device.id) {
+                  <tr class="hover:bg-zinc-900/20 transition-all group">
+                    
+                    <!-- Name & Desc -->
+                    <td class="py-4 px-4">
+                      <div class="font-bold text-white text-sm">{{ device.name }}</div>
+                      <div class="text-zinc-500 text-xs mt-0.5 max-w-xs truncate" [title]="device.description">{{ device.description || 'No description provided' }}</div>
+                    </td>
+                    
+                    <!-- IP Address -->
+                    <td class="py-4 px-4">
+                      <code class="text-zinc-300 text-xs font-mono bg-zinc-950/60 border border-zinc-800/60 rounded px-1.5 py-0.5">{{ device.ip_address }}</code>
+                    </td>
 
-</div>
+                    <!-- Type -->
+                    <td class="py-4 px-4">
+                      <span class="text-xs text-zinc-400 font-medium bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1">
+                        {{ device.type }}
+                      </span>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="py-4 px-4">
+                      <span 
+                        [class.bg-emerald-950/80]="device.status === 'Online' || device.status === 'UP'"
+                        [class.border-emerald-500/50]="device.status === 'Online' || device.status === 'UP'"
+                        [class.text-emerald-300]="device.status === 'Online' || device.status === 'UP'"
+                        [class.bg-amber-950/80]="device.status === 'Warning'"
+                        [class.border-amber-500/50]="device.status === 'Warning'"
+                        [class.text-amber-300]="device.status === 'Warning'"
+                        [class.bg-rose-950/80]="device.status === 'Offline' || device.status === 'DOWN'"
+                        [class.border-rose-500/50]="device.status === 'Offline' || device.status === 'DOWN'"
+                        [class.text-rose-300]="device.status === 'Offline' || device.status === 'DOWN'"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border backdrop-blur-md">
+                        
+                        <span 
+                          [class.bg-emerald-400]="device.status === 'Online' || device.status === 'UP'"
+                          [class.bg-amber-400]="device.status === 'Warning'"
+                          [class.bg-rose-400]="device.status === 'Offline' || device.status === 'DOWN'"
+                          class="h-1.5 w-1.5 rounded-full"></span>
+                        {{ device.status }}
+                      </span>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="py-4 px-4 text-right">
+                      <div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-200">
+                        <button 
+                          type="button" 
+                          (click)="openEditModal(device)"
+                          class="p-2 text-zinc-400 hover:text-cyan-400 bg-zinc-950/40 hover:bg-zinc-800/80 border border-zinc-800/50 hover:border-cyan-500/20 rounded-xl transition-all cursor-pointer"
+                          title="Edit Device">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                          </svg>
+                        </button>
+                        <button 
+                          type="button" 
+                          (click)="deleteDevice(device.id!)"
+                          class="p-2 text-zinc-400 hover:text-rose-400 bg-zinc-950/40 hover:bg-zinc-800/80 border border-zinc-800/50 hover:border-rose-500/20 rounded-xl transition-all cursor-pointer"
+                          title="Remove Device">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0M4.5 12h15" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+      </section>
+
+    </main>
+
+    <!-- Add/Edit Device Glassmorphic Modal -->
+    @if (showModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm animate-fade-in">
+        
+        <div class="w-full max-w-lg bg-zinc-900 border border-zinc-800/80 rounded-2xl p-6 md:p-8 shadow-2xl relative">
+          
+          <!-- Modal Close Button -->
+          <button 
+            type="button" 
+            (click)="closeModal()"
+            class="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <!-- Title -->
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-white">{{ modalMode() === 'add' ? 'Add Diagnostics Node' : 'Update Node Configuration' }}</h3>
+            <p class="text-zinc-400 text-xs mt-1">Configure node access details and physical description.</p>
+          </div>
+
+          <!-- Form -->
+          <form (ngSubmit)="onSubmitDevice()" #deviceFormModern="ngForm" class="space-y-5">
+            
+            <!-- Device Name -->
+            <div>
+              <label for="dName_mod" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Node Name</label>
+              <input 
+                type="text" 
+                id="dName_mod" 
+                name="deviceName"
+                [(ngModel)]="deviceName"
+                placeholder="e.g. Server-01" 
+                required
+                class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm" />
+            </div>
+
+            <!-- IP Address -->
+            <div>
+              <label for="dIp_mod" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">IP Address</label>
+              <input 
+                type="text" 
+                id="dIp_mod" 
+                name="deviceIp"
+                [(ngModel)]="deviceIp"
+                placeholder="e.g. 192.168.1.10" 
+                required
+                class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              
+              <!-- Type Dropdown -->
+              <div>
+                <label for="dType_mod" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Node Type</label>
+                <select 
+                  id="dType_mod" 
+                  name="deviceType"
+                  [(ngModel)]="deviceType"
+                  class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm cursor-pointer">
+                  <option value="Server">Server</option>
+                  <option value="Router">Router</option>
+                  <option value="Switch">Switch</option>
+                  <option value="IoT Node">IoT Node</option>
+                </select>
+              </div>
+
+              <!-- Status Dropdown -->
+              <div>
+                <label for="dStatus_mod" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Initial Status</label>
+                <select 
+                  id="dStatus_mod" 
+                  name="deviceStatus"
+                  [(ngModel)]="deviceStatus"
+                  class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm cursor-pointer">
+                  <option value="UP">UP</option>
+                  <option value="DOWN">DOWN</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="dDesc_mod" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Description</label>
+              <textarea 
+                id="dDesc_mod" 
+                name="deviceDesc"
+                [(ngModel)]="deviceDesc"
+                placeholder="Provide context or physical location..." 
+                rows="3"
+                class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm"></textarea>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800/80">
+              <button 
+                type="button" 
+                (click)="closeModal()"
+                class="px-5 py-2.5 rounded-xl border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/40 text-sm font-semibold text-zinc-300 hover:text-white cursor-pointer transition-all">
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                [disabled]="loading() || !deviceFormModern.form?.valid"
+                class="px-5 py-2.5 rounded-xl text-white font-semibold bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 disabled:opacity-50 disabled:pointer-events-none text-sm cursor-pointer shadow-lg transition-all flex items-center gap-2">
+                @if (loading()) {
+                  <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                } @else {
+                  {{ modalMode() === 'add' ? 'Add Node' : 'Save Changes' }}
+                }
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    }
+
+    <!-- Beautiful Toast Notifications -->
+    @if (toast(); as t) {
+      <div class="fixed bottom-6 right-6 z-50 animate-slide-up">
+        <div 
+          [class.bg-emerald-950/80]="t.type === 'success'"
+          [class.border-emerald-500/50]="t.type === 'success'"
+          [class.text-emerald-300]="t.type === 'success'"
+          [class.bg-rose-950/80]="t.type === 'error'"
+          [class.border-rose-500/50]="t.type === 'error'"
+          [class.text-rose-300]="t.type === 'error'"
+          [class.bg-zinc-900/90]="t.type === 'info'"
+          [class.border-cyan-500/50]="t.type === 'info'"
+          [class.text-cyan-300]="t.type === 'info'"
+          class="flex items-center gap-3 px-5 py-4 border backdrop-blur-xl rounded-xl shadow-2xl transition-all duration-300">
+          
+          @if (t.type === 'success') {
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-emerald-400">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          } @else if (t.type === 'error') {
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-rose-400">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-cyan-400">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.083 1.083l-1.083 1.083A.75.75 0 0110.5 13.5v-2.25c0-.414.336-.75.75-.75zM12 7.5a.75.75 0 100-1.5.75.75 0 000 1.5zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          }
+          <span class="text-sm font-medium">{{ t.message }}</span>
+        </div>
+      </div>
+    }
+
+  </div>
+}

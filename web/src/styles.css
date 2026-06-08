@@ -1,1 +1,231 @@
 @import 'tailwindcss';
+
+/* Custom Windows XP Styles */
+@utility font-xp {
+  font-family: Tahoma, 'MS Sans Serif', Geneva, sans-serif !important;
+}
+
+@utility xp-desktop {
+  background-image: url('/bliss.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: Tahoma, 'MS Sans Serif', Geneva, sans-serif;
+}
+
+/* Classic XP Window styling */
+@utility xp-window {
+  background-color: #ece9d8;
+  border: 3px solid #0058e6;
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 1px 1px 0px #fff, inset -1px -1px 0px #808080, 2px 2px 8px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+@utility xp-window-inner {
+  border: 1px solid #ffffff;
+  background-color: #f1efe2;
+  padding: 2px;
+}
+
+@utility xp-title-bar {
+  background: linear-gradient(180deg, #0058e6 0%, #2576f7 12%, #0058e6 50%, #0046b8 100%);
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #0f3c8f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  user-select: none;
+  border-bottom: 1px solid #003ea1;
+}
+
+@utility xp-title-text {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@utility xp-title-buttons {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Minimize/Maximize/Close buttons */
+@utility xp-btn-min {
+  width: 21px;
+  height: 21px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  background: linear-gradient(180deg, #387cfc 0%, #0c4cfb 100%);
+  border-color: #0c4cfb;
+
+  &:hover {
+    background: linear-gradient(180deg, #5c94ff 0%, #2964ff 100%);
+  }
+}
+
+@utility xp-btn-max {
+  width: 21px;
+  height: 21px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  background: linear-gradient(180deg, #387cfc 0%, #0c4cfb 100%);
+  border-color: #0c4cfb;
+
+  &:hover {
+    background: linear-gradient(180deg, #5c94ff 0%, #2964ff 100%);
+  }
+}
+
+@utility xp-btn-close {
+  width: 21px;
+  height: 21px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  background: linear-gradient(180deg, #f07040 0%, #e04010 40%, #b01000 100%);
+  border-color: #a01000;
+
+  &:hover {
+    background: linear-gradient(180deg, #ff9470 0%, #f06030 40%, #d02010 100%);
+  }
+}
+
+/* Classic bevel boxes */
+@utility xp-bevel-in {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  background-color: #ffffff;
+}
+
+@utility xp-bevel-out {
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  background-color: #ece9d8;
+}
+
+/* Taskbar and Start button */
+@utility xp-taskbar {
+  background: linear-gradient(180deg, #245dd7 0%, #0e3cb4 10%, #114de2 50%, #245dd7 100%);
+  border-top: 2px solid #3d7bf4;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+}
+
+@utility xp-start-btn {
+  background: linear-gradient(180deg, #3cbe3c 0%, #2d8a2d 40%, #1e5c1e 100%);
+  border-right: 2px solid #1a501a;
+  border-top: 1px solid #8ee48e;
+  border-left: 1px solid #8ee48e;
+  border-bottom: 1px solid #133b13;
+  border-radius: 0 10px 10px 0;
+  height: 100%;
+  padding: 0 16px 0 10px;
+  color: white;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 16px;
+  text-shadow: 1px 1px 2px #0f350f;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+
+  &:hover {
+    background: linear-gradient(180deg, #4ce04c 0%, #35a335 40%, #236d23 100%);
+  }
+}
+
+/* Form Elements */
+@utility xp-input {
+  border-top: 2px solid #7f9db9;
+  border-left: 2px solid #7f9db9;
+  border-right: 1px solid #d6e3f2;
+  border-bottom: 1px solid #d6e3f2;
+  padding: 4px 6px;
+  font-size: 13px;
+  color: #000;
+  background-color: #ffffff;
+  outline: none;
+}
+
+@utility xp-btn {
+  background: linear-gradient(180deg, #ffffff 0%, #eae7d4 100%);
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  box-shadow: inset 1px 1px 0px #ffffff;
+  color: #000;
+  font-size: 13px;
+  padding: 6px 16px;
+  font-weight: normal;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: Tahoma, sans-serif;
+
+  &:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #f6f4e8 60%, #e3dfcb 100%);
+    box-shadow: inset 1px 1px 0px #ffffff, 0 0 2px #ffc107;
+    border-color: #ffc107;
+  }
+  &:active {
+    background: #eae7d4;
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  &:disabled {
+    color: #a0a0a0;
+    border-color: #c0c0c0;
+    background: #f0ede0;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+@utility xp-label {
+  font-family: Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333333;
+}

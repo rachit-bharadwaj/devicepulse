@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { ThemeService } from '../services/theme.service';
 
 export interface Device {
   id?: number;
@@ -23,6 +24,7 @@ export interface Device {
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public readonly authService = inject(AuthService);
+  public readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:8000/device';
@@ -46,6 +48,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   deviceStatus = signal('UP');
   deviceDesc = signal('');
 
+  // Address Bar
+  addressBarValue = '';
+
   // Notifications
   toast = signal<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
@@ -53,6 +58,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (typeof window === 'undefined') {
       return;
     }
+    this.addressBarValue = window.location.href;
+    
+    // Dynamically update address bar when local navigation occurs
+    this.router.events.subscribe(() => {
+      if (typeof window !== 'undefined') {
+        this.addressBarValue = window.location.href;
+      }
+    });
+
     // Auth Guard check
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
@@ -60,6 +74,62 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     this.fetchDevices();
     this.connectWebSocket();
+  }
+
+  navigateAddress() {
+    let target = this.addressBarValue.trim();
+    if (!target) return;
+
+    // Normalize path separators
+    const normalized = target.replace(/\//g, '\\');
+
+    // 1. If logon / login / register
+    if (
+      normalized.toLowerCase().includes('devicepulse\\login') || 
+      normalized.toLowerCase().includes('devicepulse\\logon') ||
+      normalized.toLowerCase().endsWith('\\login') ||
+      normalized.toLowerCase().endsWith('\\logon') ||
+      normalized.toLowerCase().endsWith('\\register')
+    ) {
+      const path = normalized.toLowerCase().includes('register') ? '/register' : '/login';
+      this.router.navigate([path]);
+      return;
+    }
+
+    // 2. If local grid / root
+    if (
+      normalized.toLowerCase().includes('devicepulse\\localgrid') ||
+      normalized.toLowerCase().endsWith('\\localgrid') ||
+      normalized.toLowerCase() === 'c:\\devicepulse' ||
+      normalized === '\\' ||
+      normalized === ''
+    ) {
+      this.router.navigate(['/']);
+      this.addressBarValue = 'C:\\DevicePulse\\LocalGrid';
+      return;
+    }
+
+    // 3. Absolute URL
+    if (target.startsWith('http://') || target.startsWith('https://')) {
+      try {
+        const urlObj = new URL(target);
+        if (urlObj.origin === window.location.origin) {
+          this.router.navigate([urlObj.pathname]);
+        } else {
+          window.location.href = target;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      return;
+    }
+
+    // 4. Relative paths / fallback
+    let relative = target.replace(/\\/g, '/');
+    if (!relative.startsWith('/')) {
+      relative = '/' + relative;
+    }
+    this.router.navigate([relative]);
   }
 
   showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
