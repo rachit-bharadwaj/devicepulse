@@ -19,7 +19,7 @@ Device Pulse is a real-time network diagnostics monitoring system designed for d
 3. [🛠️ Quick Start & Installation](#%EF%B8%8F-quick-start--installation)
     - [Backend Setup](#backend-setup)
     - [Frontend Setup](#frontend-setup)
-4. [📑 Technical Assessment: Part 4 Answers](#-technical-assessment-part-4-answers)
+4. [📑 Architecture & Design](Architecture.md)
 
 ---
 
