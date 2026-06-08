@@ -54,9 +54,7 @@
         <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
         <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Online Nodes</span>
         <div class="text-3xl font-bold mt-2 text-emerald-400 flex items-center gap-2">
-          {{ devices().length - (devices() | slice:0).length }}
-          <!-- Wait: Let's count properly via a helper or just inline calculation -->
-          {{ devices().length }}
+          {{ onlineDevicesCount() }}
           <span class="flex h-3.5 w-3.5 relative">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
@@ -178,21 +176,21 @@
                   <!-- Status -->
                   <td class="py-4 px-4">
                     <span 
-                      [class.bg-emerald-950/80]="device.status === 'Online'"
-                      [class.border-emerald-500/50]="device.status === 'Online'"
-                      [class.text-emerald-300]="device.status === 'Online'"
+                      [class.bg-emerald-950/80]="device.status === 'Online' || device.status === 'UP'"
+                      [class.border-emerald-500/50]="device.status === 'Online' || device.status === 'UP'"
+                      [class.text-emerald-300]="device.status === 'Online' || device.status === 'UP'"
                       [class.bg-amber-950/80]="device.status === 'Warning'"
                       [class.border-amber-500/50]="device.status === 'Warning'"
                       [class.text-amber-300]="device.status === 'Warning'"
-                      [class.bg-rose-950/80]="device.status === 'Offline'"
-                      [class.border-rose-500/50]="device.status === 'Offline'"
-                      [class.text-rose-300]="device.status === 'Offline'"
+                      [class.bg-rose-950/80]="device.status === 'Offline' || device.status === 'DOWN'"
+                      [class.border-rose-500/50]="device.status === 'Offline' || device.status === 'DOWN'"
+                      [class.text-rose-300]="device.status === 'Offline' || device.status === 'DOWN'"
                       class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border backdrop-blur-md">
                       
                       <span 
-                        [class.bg-emerald-400]="device.status === 'Online'"
+                        [class.bg-emerald-400]="device.status === 'Online' || device.status === 'UP'"
                         [class.bg-amber-400]="device.status === 'Warning'"
-                        [class.bg-rose-400]="device.status === 'Offline'"
+                        [class.bg-rose-400]="device.status === 'Offline' || device.status === 'DOWN'"
                         class="h-1.5 w-1.5 rounded-full"></span>
                       {{ device.status }}
                     </span>
@@ -309,9 +307,8 @@
                 name="deviceStatus"
                 [(ngModel)]="deviceStatus"
                 class="block w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm cursor-pointer">
-                <option value="Online">Online</option>
-                <option value="Warning">Warning</option>
-                <option value="Offline">Offline</option>
+                <option value="UP">UP</option>
+                <option value="DOWN">DOWN</option>
               </select>
             </div>
 

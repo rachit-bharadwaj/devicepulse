@@ -6,7 +6,7 @@ from app.schemas import DeviceCreate, DeviceUpdate
 
 
 async def get_devices(db: Session = Depends(connect_db)):
-    devices = db.query(Device).all()
+    devices = db.query(Device).order_by(Device.id.asc()).all()
     return {
         "status": 200,
         "message": "Devices fetched successfully",
@@ -41,6 +41,14 @@ async def add_device(device_data: DeviceCreate, db: Session = Depends(connect_db
     db.add(db_device)
     db.commit()
     db.refresh(db_device)
+
+    # Broadcast device creation
+    from app.utils.websocket import manager
+    await manager.broadcast({
+        "event": "device_created",
+        "device": db_device
+    })
+
     return {
         "status": 201,
         "message": "Device added successfully",
@@ -62,6 +70,14 @@ async def update_device(device_id: int, device_data: DeviceUpdate, db: Session =
         
     db.commit()
     db.refresh(db_device)
+
+    # Broadcast device update
+    from app.utils.websocket import manager
+    await manager.broadcast({
+        "event": "device_updated",
+        "device": db_device
+    })
+
     return {
         "status": 200,
         "message": "Device updated successfully",
@@ -78,6 +94,14 @@ async def remove_device(device_id: int, db: Session = Depends(connect_db)):
         )
     db.delete(db_device)
     db.commit()
+
+    # Broadcast device deletion
+    from app.utils.websocket import manager
+    await manager.broadcast({
+        "event": "device_deleted",
+        "id": device_id
+    })
+
     return {
         "status": 204,
         "message": "Device removed successfully",

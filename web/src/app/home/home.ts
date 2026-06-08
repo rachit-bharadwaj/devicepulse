@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,7 +21,7 @@ export interface Device {
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
@@ -29,6 +29,9 @@ export class HomeComponent implements OnInit {
 
   // State
   devices = signal<Device[]>([]);
+  onlineDevicesCount = computed(() => {
+    return this.devices().filter(d => d.status === 'UP' || d.status === 'Online').length;
+  });
   loading = signal(false);
   
   // Modal State
@@ -40,7 +43,7 @@ export class HomeComponent implements OnInit {
   deviceName = signal('');
   deviceIp = signal('');
   deviceType = signal('Server');
-  deviceStatus = signal('Online');
+  deviceStatus = signal('UP');
   deviceDesc = signal('');
 
   // Notifications
@@ -53,6 +56,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.fetchDevices();
+    this.connectWebSocket();
   }
 
   showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
@@ -67,7 +71,8 @@ export class HomeComponent implements OnInit {
     this.http.get<any>(this.baseUrl).subscribe({
       next: (res) => {
         this.loading.set(false);
-        this.devices.set(res.devices || []);
+        const sorted = (res.devices || []).sort((a: any, b: any) => (a.id || 0) - (b.id || 0));
+        this.devices.set(sorted);
       },
       error: (err) => {
         this.loading.set(false);
@@ -115,7 +120,7 @@ export class HomeComponent implements OnInit {
     this.deviceName.set('');
     this.deviceIp.set('');
     this.deviceType.set('Server');
-    this.deviceStatus.set('Online');
+    this.deviceStatus.set('UP');
     this.deviceDesc.set('');
   }
 
@@ -214,5 +219,63 @@ export class HomeComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  private ws: WebSocket | null = null;
+
+  connectWebSocket() {
+    const wsUrl = 'ws://localhost:8000/ws';
+    this.ws = new WebSocket(wsUrl);
+
+    this.ws.onopen = () => {
+      console.log('WebSocket connection established.');
+    };
+
+    this.ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        const eventType = data.event;
+        const device = data.device;
+        const id = data.id;
+
+        if (eventType === 'device_created') {
+          const current = this.devices();
+          if (!current.some(d => d.id === device.id)) {
+            const updated = [...current, device].sort((a, b) => (a.id || 0) - (b.id || 0));
+            this.devices.set(updated);
+          }
+        } else if (eventType === 'device_updated') {
+          const current = this.devices();
+          const existing = current.find(d => d.id === device.id);
+          if (existing && existing.status !== device.status) {
+            this.showToast(`Device "${device.name}" is now ${device.status}`, device.status === 'UP' ? 'success' : 'error');
+          }
+          const updated = current.map(d => d.id === device.id ? device : d);
+          this.devices.set(updated);
+        } else if (eventType === 'device_deleted') {
+          const current = this.devices();
+          this.devices.set(current.filter(d => d.id !== id));
+        }
+      } catch (err) {
+        console.error('Error handling WebSocket message:', err);
+      }
+    };
+
+    this.ws.onclose = () => {
+      console.log('WebSocket connection closed. Reconnecting in 3 seconds...');
+      setTimeout(() => this.connectWebSocket(), 3000);
+    };
+
+    this.ws.onerror = (err) => {
+      console.error('WebSocket error:', err);
+      this.ws?.close();
+    };
+  }
+
+  ngOnDestroy() {
+    if (this.ws) {
+      this.ws.onclose = null;
+      this.ws.close();
+    }
   }
 }
